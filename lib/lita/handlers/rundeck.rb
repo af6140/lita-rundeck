@@ -101,6 +101,7 @@ module Lita
         config.url       = nil
         config.token     = nil
         config.api_debug = false
+        config.use_runas = false
       end
 
       def info(response)
@@ -290,7 +291,7 @@ module Lita
           return
         end
 
-        response.reply "[#{project}] - #{job}\n" + 
+        response.reply "[#{project}] - #{job}\n" +
           client.definition(project,job).pretty_print_options
       end
 
@@ -345,6 +346,10 @@ module Lita
         @url ||= Lita.config.handlers.rundeck.url
       end
 
+      def use_runas
+        @use_runas || = Lita.config.handlers.rundeck.use_runas
+      end
+
       def token
         @token ||= Lita.config.handlers.rundeck.token
       end
@@ -354,7 +359,7 @@ module Lita
       end
 
       def client
-        @client ||= API::Client.new(url,token,http,log,api_debug)
+        @client ||= API::Client.new(url,token,http,log,api_debug, use_runas)
       end
 
       def aliasdb
@@ -447,12 +452,13 @@ module Lita
             return ref   if ref.is_a?(Array)
           end
 
-          def initialize(url, token, http, log, debug=false)
+          def initialize(url, token, http, log, debug=false, use_runas=false)
             @url   = url
             @token = token
             @http  = http
             @log   = log
             @debug = debug
+            @use_runas = use_runas
           end
 
           def get(path,options={})
@@ -535,7 +541,7 @@ module Lita
 
           def run(project,name,options,user)
             job = job(project,name)
-            Job.run(self,job.id,options,nil)
+            Job.run(self,job.id,options,@use_runas ? user : nil)
           end
 
           def output(id, max)
@@ -609,7 +615,7 @@ module Lita
             max = max.to_i + 2
             response = client.get("/api/5/execution/#{id}/output?lastlines=#{max}")
             if response["output"]
-              Output.new(response["output"]) 
+              Output.new(response["output"])
             elsif response["error"][0]
               Output.new(
                 "id" => id,

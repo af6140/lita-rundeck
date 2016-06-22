@@ -30,6 +30,7 @@ gem "lita-rundeck"
 Lita.configure do |config|
   config.handlers.rundeck.url = "https://rundeck.mycompany.org"
   config.handlers.rundeck.token = "abcdefghijzlmnopqrstuvwxyz"
+  config.handlers.rundeck.use_runas = false
   config.handlers.rundeck.api_debug = true
 end
 ```
