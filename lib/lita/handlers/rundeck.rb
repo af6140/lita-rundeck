@@ -347,7 +347,7 @@ module Lita
       end
 
       def use_runas
-        @use_runas || = Lita.config.handlers.rundeck.use_runas
+        @use_runas ||= Lita.config.handlers.rundeck.use_runas
       end
 
       def token
