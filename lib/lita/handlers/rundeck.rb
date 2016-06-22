@@ -541,7 +541,9 @@ module Lita
 
           def run(project,name,options,user)
             job = job(project,name)
-            if @use_runas user = nil
+            if @use_runas
+              user = nil
+            end
             Job.run(self,job.id,options,user)
           end
 
