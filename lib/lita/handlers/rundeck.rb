@@ -7,7 +7,7 @@ module Lita
       config :url , type: String, required:true, default: nil
       config :token , type: String, required:true, default: nil
       config :api_debug , type: [TrueClass, FalseClass], required:true, default: false
-      config :user_runas , type: [TrueClass, FalseClass], required:true, default: false
+      config :use_runas , type: [TrueClass, FalseClass], required:true, default: false
       #   config.token     = nil
       #   config.api_debug = false
       #   config.use_runas = false
